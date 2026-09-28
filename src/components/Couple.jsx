@@ -1,12 +1,16 @@
 import { useRef } from 'react'
 import { motion, useScroll, useTransform } from 'motion/react'
-import Photo from './Photo.jsx'
+import { useTranslation } from 'react-i18next'
+import PortraitSlideshow from './PortraitSlideshow.jsx'
 import { SectionTitle } from './Ornament.jsx'
 import { BrideToon, GroomToon } from './Toons.jsx'
 import { wedding } from '../data.js'
 
-function Person({ person, role, side, progress }) {
+function Person({ who, side, progress }) {
+  const { t } = useTranslation()
   const y = useTransform(progress, [0, 1], side === 'left' ? [60, -60] : [120, -30])
+  // full names here; the rest of the site uses first names
+  const name = t(`names.${who}Full`)
   return (
     <motion.article
       className="person"
@@ -19,7 +23,7 @@ function Person({ person, role, side, progress }) {
       <div className="arch-wrap">
         <div className="arch-frame">
           <div className="arch-inner">
-            <Photo src={person.photo} alt={person.name} />
+            <PortraitSlideshow photos={wedding[who].photos} alt={name} delay={who === 'bride' ? 2500 : 0} />
           </div>
         </div>
         <motion.div
@@ -29,31 +33,32 @@ function Person({ person, role, side, progress }) {
           viewport={{ once: true, amount: 0.6 }}
           transition={{ type: 'spring', stiffness: 140, damping: 12, delay: 0.6 }}
         >
-          {role === 'The Bride' ? <BrideToon /> : <GroomToon />}
+          {who === 'bride' ? <BrideToon /> : <GroomToon />}
         </motion.div>
       </div>
-      <p className="kicker">{role}</p>
-      <h3 className="script">{person.name}</h3>
-      <p className="muted">{person.parents}</p>
+      <p className="kicker">{t(`couple.${who}`)}</p>
+      <h3 className="script">{name}</h3>
+      <p className="muted">{t(`couple.${who}Parents`)}</p>
     </motion.article>
   )
 }
 
 export default function Couple() {
+  const { t } = useTranslation()
   const ref = useRef(null)
   const { scrollYProgress } = useScroll({ target: ref, offset: ['start end', 'end start'] })
   const ringRotate = useTransform(scrollYProgress, [0, 1], [-60, 60])
 
   return (
     <section className="couple section" id="couple" ref={ref}>
-      <SectionTitle kicker="Two hearts, one faith" title="The Bride & Groom" />
+      <SectionTitle kicker={t('couple.kicker')} title={t('couple.title')} />
       <div className="couple-grid">
-        <Person person={wedding.bride} role="The Bride" side="left" progress={scrollYProgress} />
+        <Person who="groom" side="left" progress={scrollYProgress} />
         <motion.div className="rings" style={{ rotate: ringRotate }} aria-hidden="true">
           <span />
           <span />
         </motion.div>
-        <Person person={wedding.groom} role="The Groom" side="right" progress={scrollYProgress} />
+        <Person who="bride" side="right" progress={scrollYProgress} />
       </div>
     </section>
   )

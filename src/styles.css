@@ -210,7 +210,9 @@ a {
   font-family: var(--script);
   font-weight: 400;
   font-size: clamp(2.2rem, 6vw, 3.6rem);
-  margin: 0;
+  /* room for the script swashes (e.g. the S) so background-clip doesn't cut them */
+  padding: 0.1em 0.4em;
+  margin: -0.1em -0.4em;
   line-height: 1.1;
   background: var(--gold-grad);
   background-size: 200% auto;
@@ -309,8 +311,177 @@ a {
   pointer-events: none;
 }
 
-.doors-btn {
+.doorway {
+  cursor: pointer;
+}
+
+.door-leaves {
+  position: absolute;
+  inset: 0;
+  perspective: 1600px;
+}
+
+/* warm light leaking through the gap between the closed doors */
+.door-gap-light {
+  position: absolute;
+  top: 6%;
+  bottom: 0;
+  left: 50%;
+  width: 3px;
+  margin-left: -1.5px;
+  border-radius: 2px;
+  background: linear-gradient(180deg, rgba(255, 236, 170, 0) 0%, #ffe7a8 18%, #fff6d8 55%, #ffd98a 100%);
+  box-shadow: 0 0 8px 2px rgba(255, 214, 130, 0.75), 0 0 28px 8px rgba(255, 196, 100, 0.35);
+  pointer-events: none;
+  animation: gapPulse 3.2s ease-in-out infinite;
+  transition: opacity 0.5s, width 0.4s, margin 0.4s;
+}
+
+.door-gap-light.bright {
+  animation: none;
+  opacity: 1;
+  width: 6px;
+  margin-left: -3px;
+  background: linear-gradient(180deg, rgba(255, 226, 140, 0.2) 0%, #ffd97a 15%, #fff1c4 55%, #ffcf6a 100%);
+  box-shadow: 0 0 16px 5px rgba(255, 224, 150, 0.95), 0 0 60px 20px rgba(255, 200, 110, 0.55);
+}
+
+.door-gap-light.gone,
+.door-threshold-light.gone {
+  animation: none;
+  opacity: 0;
+}
+
+.door-threshold-light {
+  position: absolute;
+  left: 18%;
+  right: 18%;
+  bottom: 0;
+  height: 3px;
+  border-radius: 50%;
+  background: radial-gradient(ellipse at center, #ffe7a8 0%, rgba(255, 214, 130, 0) 70%);
+  box-shadow: 0 0 22px 6px rgba(255, 200, 110, 0.35);
+  pointer-events: none;
+  animation: gapPulse 3.2s ease-in-out infinite;
+  transition: opacity 0.5s;
+}
+
+@keyframes gapPulse {
+  0%,
+  100% {
+    opacity: 0.55;
+  }
+  50% {
+    opacity: 1;
+  }
+}
+
+/* gold wax-style seal across the doors */
+.door-seal {
+  position: absolute;
+  left: 50%;
+  top: 40%;
+  translate: -50% -50%;
+  width: clamp(72px, 20vw, 96px);
+  aspect-ratio: 1;
+  padding: 0;
+  z-index: 3;
+  border-radius: 50%;
+  filter: drop-shadow(0 6px 10px rgba(0, 0, 0, 0.55)) drop-shadow(0 0 10px rgba(243, 220, 154, 0.35));
+  animation: sealGlow 3.2s ease-in-out infinite;
+}
+
+.door-seal:disabled {
+  cursor: default;
+}
+
+.door-seal.glowing {
+  animation: none;
+  filter: drop-shadow(0 0 14px rgba(255, 236, 170, 0.95)) drop-shadow(0 0 36px rgba(255, 210, 120, 0.7));
+}
+
+@keyframes sealGlow {
+  0%,
+  100% {
+    filter: drop-shadow(0 6px 10px rgba(0, 0, 0, 0.55)) drop-shadow(0 0 8px rgba(243, 220, 154, 0.25));
+  }
+  50% {
+    filter: drop-shadow(0 6px 10px rgba(0, 0, 0, 0.55)) drop-shadow(0 0 20px rgba(243, 220, 154, 0.7));
+  }
+}
+
+.seal-half {
+  position: absolute;
+  inset: 0;
+}
+
+.seal-half svg {
+  display: block;
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+}
+
+/* jagged crack down the middle so the halves look broken, not cut */
+.seal-half.left {
+  clip-path: polygon(0 -10%, 52% -10%, 47% 18%, 54% 36%, 46% 55%, 53% 74%, 48% 110%, 0 110%);
+}
+
+.seal-half.right {
+  clip-path: polygon(52% -10%, 100% -10%, 100% 110%, 48% 110%, 53% 74%, 46% 55%, 54% 36%, 47% 18%);
+}
+
+.seal-burst {
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(255, 246, 216, 0.95) 0%, rgba(255, 214, 130, 0.5) 40%, transparent 70%);
+  pointer-events: none;
+}
+
+.seal-ripple {
+  position: absolute;
+  inset: -6px;
+  border-radius: 50%;
+  border: 1.5px solid rgba(243, 220, 154, 0.7);
+  pointer-events: none;
+  animation: sealRipple 2.4s ease-out infinite;
+}
+
+@keyframes sealRipple {
+  0% {
+    transform: scale(0.9);
+    opacity: 0.8;
+  }
+  100% {
+    transform: scale(1.6);
+    opacity: 0;
+  }
+}
+
+.doors-hint-wrap {
   position: relative;
+  margin: 0;
+}
+
+.doors-hint {
+  display: inline-block;
+  font-family: var(--caps);
+  font-size: 0.72rem;
+  letter-spacing: 0.35em;
+  text-transform: uppercase;
+  color: var(--gold-light);
+  animation: hintPulse 2.4s ease-in-out infinite;
+}
+
+@keyframes hintPulse {
+  0%,
+  100% {
+    opacity: 0.45;
+  }
+  50% {
+    opacity: 1;
+  }
 }
 
 /* ───────────────── Hero ───────────────── */
@@ -380,7 +551,7 @@ a {
 
 .hero-content {
   position: relative;
-  z-index: 2;
+  z-index: 4; /* above doves & scroll cue so the calendar menu isn't covered */
   padding: 0 16px;
   max-width: 1000px;
 }
@@ -768,6 +939,22 @@ a {
   transition: transform 1.2s var(--ease);
 }
 
+.slideshow {
+  position: relative;
+  width: 100%;
+  height: 100%;
+}
+
+.slide {
+  position: absolute;
+  inset: 0;
+  will-change: opacity, transform;
+}
+
+.arch-inner .slide img {
+  object-position: var(--focus, 50% 30%);
+}
+
 .person:hover .arch-inner img {
   transform: scale(1.06);
 }
@@ -1097,9 +1284,22 @@ a {
 
 /* ───────────────── Events ───────────────── */
 .events {
-  background: radial-gradient(ellipse at 50% 20%, #fffaf0 0%, var(--parchment) 70%, #e2d1ad 100%);
+  /* top edge matches the Groom & Bride section above so the two blend */
+  background: linear-gradient(180deg, #e8d9b8 0%, transparent 18%),
+    radial-gradient(ellipse at 50% 30%, #fffaf0 0%, var(--parchment) 70%, #e2d1ad 100%);
   color: var(--ink);
   perspective: 1200px;
+}
+
+/* gold hairline at the seam between the two ivory sections */
+.couple + .events::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 12%;
+  right: 12%;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(184, 141, 52, 0.55), transparent);
 }
 
 .events .section-title h2 {
@@ -1540,8 +1740,273 @@ footer .muted {
   }
 }
 
+/* ───────────────── Language toggle ───────────────── */
+.lang-toggle {
+  position: fixed;
+  left: 18px;
+  bottom: 18px;
+  z-index: 120; /* above the church doors screen */
+  display: flex;
+  padding: 4px;
+  border-radius: 999px;
+  background: rgba(14, 10, 26, 0.8);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(201, 162, 74, 0.45);
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.45);
+}
+
+.lang-toggle button {
+  position: relative;
+  min-width: 46px;
+  height: 40px;
+  padding: 0 12px;
+  border-radius: 999px;
+  color: var(--gold-light);
+  font-family: 'Cinzel', 'Noto Serif Telugu', serif;
+  font-size: 0.8rem;
+  letter-spacing: 0.08em;
+  transition: color 0.3s;
+}
+
+.lang-toggle button[lang='te'] {
+  font-family: 'Noto Serif Telugu', serif;
+  font-size: 0.95rem;
+  letter-spacing: 0;
+}
+
+.lang-toggle button.active {
+  color: #2a1a0a;
+}
+
+.lang-pill {
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background: var(--gold-grad);
+  background-size: 200% auto;
+}
+
+.lang-label {
+  position: relative;
+}
+
+@media (max-width: 600px) {
+  .lang-toggle button {
+    height: 36px;
+    min-width: 42px;
+  }
+}
+
+/* ───────────────── Add to calendar ───────────────── */
+.hero-cal {
+  margin-top: 1.4rem;
+}
+
+.cal {
+  position: relative;
+  display: inline-block;
+}
+
+.cal-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6em;
+  padding: 0.75em 1.5em;
+  border-radius: 999px;
+  border: 1px solid rgba(243, 220, 154, 0.6);
+  background: rgba(14, 10, 26, 0.45);
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+  color: var(--gold-light);
+  font-family: var(--caps);
+  font-size: 0.7rem;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  transition: background 0.3s, color 0.3s;
+}
+
+.cal-btn:hover,
+.cal-btn[aria-expanded='true'] {
+  background: rgba(201, 162, 74, 0.25);
+}
+
+.cal-btn svg {
+  width: 17px;
+  height: 17px;
+}
+
+.cal-menu {
+  position: absolute;
+  top: calc(100% + 10px);
+  left: 50%;
+  translate: -50% 0;
+  z-index: 10;
+  min-width: 230px;
+  padding: 6px;
+  border-radius: 14px;
+  background: rgba(14, 10, 26, 0.95);
+  border: 1px solid rgba(201, 162, 74, 0.45);
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.6);
+  display: flex;
+  flex-direction: column;
+}
+
+.cal-menu a,
+.cal-menu button {
+  display: block;
+  padding: 0.8em 1em;
+  border-radius: 10px;
+  text-align: left;
+  text-decoration: none;
+  font-size: 0.95rem;
+  color: var(--ivory);
+  transition: background 0.2s, color 0.2s;
+}
+
+.cal-menu a:hover,
+.cal-menu button:hover {
+  background: rgba(201, 162, 74, 0.2);
+  color: var(--gold-light);
+}
+
+/* ───────────────── Doves ───────────────── */
+.doves {
+  position: absolute;
+  left: 50%;
+  width: 0;
+  height: 0;
+  z-index: 3;
+  pointer-events: none;
+}
+
+.dove-path {
+  position: absolute;
+  left: 0;
+  top: 0;
+  will-change: transform;
+}
+
+.dove {
+  display: block;
+  width: 140px;
+  margin: -52px 0 0 -70px;
+  overflow: visible;
+  filter: drop-shadow(0 0 10px rgba(255, 240, 200, 0.55)) drop-shadow(0 8px 10px rgba(0, 0, 0, 0.3));
+}
+
+.wing {
+  transform-box: fill-box;
+  transform-origin: 50% 100%;
+  animation: flap 0.34s ease-in-out infinite alternate;
+}
+
+.wing-back {
+  animation-name: flapBack;
+}
+
+@keyframes flap {
+  from {
+    transform: scaleY(1);
+  }
+  to {
+    transform: scaleY(-0.55);
+  }
+}
+
+@keyframes flapBack {
+  from {
+    transform: scaleY(0.85);
+  }
+  to {
+    transform: scaleY(-0.4);
+  }
+}
+
+@media (max-width: 600px) {
+  .dove {
+    width: 96px;
+    margin: -36px 0 0 -48px;
+  }
+}
+
+/* ───────────────── Telugu ───────────────── */
+/* Latin fonts stay first (hashtag, monogram…); Telugu glyphs fall back to Telugu fonts */
+html[lang='te'] {
+  --serif: 'Cormorant Garamond', 'Noto Serif Telugu', Georgia, serif;
+  --caps: 'Cinzel', 'Noto Serif Telugu', serif;
+  --script: 'Great Vibes', 'Suravaram', 'Noto Serif Telugu', serif;
+}
+
+/* wide tracking and uppercase don't suit Telugu script */
+html[lang='te']
+  :is(.kicker, .hero-date, .hero-city, .doors-hint, .nav li button, .cd-unit small, .btn-gold, .btn-ghost, .section-title h2, .event-card h3, .verse cite, .cal-btn, .music-label, .photo-placeholder small) {
+  letter-spacing: 0.02em;
+  text-transform: none;
+}
+
+html[lang='te'] .kicker {
+  font-size: 0.85em;
+}
+
+html[lang='te'] .nav li button {
+  font-size: 0.82rem;
+}
+
+html[lang='te'] .cd-unit small {
+  font-size: 0.8rem;
+}
+
+html[lang='te'] :is(.hero-date, .cal-btn, .doors-hint) {
+  font-size: 0.95rem;
+}
+
+html[lang='te'] .hero-names {
+  font-size: clamp(2.8rem, 8vw, 6.2rem);
+  line-height: 1.35;
+}
+
+html[lang='te'] .doors-names {
+  font-size: clamp(1.9rem, 5vw, 3rem);
+}
+
+html[lang='te'] .person h3 {
+  font-size: clamp(2rem, 4vw, 2.8rem);
+}
+
+html[lang='te'] :is(.frame-caption, .lightbox-figure figcaption) {
+  font-size: 1.25rem;
+}
+
+html[lang='te'] .event-time {
+  font-size: 1.5rem;
+}
+
+html[lang='te'] footer .script {
+  font-size: 2rem;
+}
+
+html[lang='te'] .section-title h2 {
+  font-size: clamp(1.8rem, 4.4vw, 3rem);
+  line-height: 1.4;
+}
+
+html[lang='te'] .verse p {
+  font-size: clamp(1.3rem, 3.2vw, 2.3rem);
+  line-height: 1.6;
+}
+
+html[lang='te'] .blessing-quote {
+  font-size: clamp(1.25rem, 3vw, 2rem);
+  line-height: 1.6;
+}
+
 /* ───────────────── Reduced motion ───────────────── */
 @media (prefers-reduced-motion: reduce) {
+  .doves {
+    display: none;
+  }
+
   .petal,
   .rose-spin,
   .ray,
@@ -1554,6 +2019,12 @@ footer .muted {
   .toon-heart,
   .music-bars i,
   .music-ring,
+  .door-gap-light,
+  .door-threshold-light,
+  .door-seal,
+  .seal-ripple,
+  .doors-hint,
+  .wing,
   .section-title h2 {
     animation: none !important;
   }

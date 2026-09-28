@@ -11,6 +11,7 @@ import {
 } from 'motion/react'
 import Photo from './Photo.jsx'
 import { SectionTitle } from './Ornament.jsx'
+import { useTranslation } from 'react-i18next'
 import { wedding } from '../data.js'
 
 // Pendulum spring: low damping so frames keep swinging and settle slowly
@@ -30,6 +31,7 @@ function usePerRow() {
 }
 
 function HangingFrame({ item, index, scrollSwing, onOpen }) {
+  const { t } = useTranslation()
   const push = useMotionValue(0)
   const factor = 0.7 + (index % 3) * 0.25
   const rotate = useTransform(() => TILTS[index % TILTS.length] + push.get() + scrollSwing.get() * factor)
@@ -65,7 +67,7 @@ function HangingFrame({ item, index, scrollSwing, onOpen }) {
           onPointerEnter={onPointerEnter}
           onClick={() => onOpen(index)}
           whileTap={{ scale: 0.97 }}
-          aria-label={`Open photo: ${item.caption}`}
+          aria-label={t('gallery.open', { caption: item.caption })}
         >
           <span className="frame-mat">
             <Photo src={item.src} alt={item.caption} />
@@ -78,6 +80,9 @@ function HangingFrame({ item, index, scrollSwing, onOpen }) {
 }
 
 export default function HangingGallery() {
+  const { t } = useTranslation()
+  const captions = t('gallery.captions', { returnObjects: true })
+  const items = wedding.gallery.map((src, i) => ({ src, caption: captions[i] ?? '' }))
   const perRow = usePerRow()
   const [open, setOpen] = useState(null)
 
@@ -88,14 +93,15 @@ export default function HangingGallery() {
   const scrollSwing = useSpring(swingTarget, { stiffness: 50, damping: 6 })
 
   const rows = []
-  for (let i = 0; i < wedding.gallery.length; i += perRow) rows.push(wedding.gallery.slice(i, i + perRow))
+  for (let i = 0; i < items.length; i += perRow) rows.push(items.slice(i, i + perRow))
 
   useEffect(() => {
     if (open === null) return
     const onKey = (e) => {
       if (e.key === 'Escape') setOpen(null)
-      if (e.key === 'ArrowRight') setOpen((o) => (o + 1) % wedding.gallery.length)
-      if (e.key === 'ArrowLeft') setOpen((o) => (o - 1 + wedding.gallery.length) % wedding.gallery.length)
+      const n = wedding.gallery.length
+      if (e.key === 'ArrowRight') setOpen((o) => (o + 1) % n)
+      if (e.key === 'ArrowLeft') setOpen((o) => (o - 1 + n) % n)
     }
     window.addEventListener('keydown', onKey)
     return () => window.removeEventListener('keydown', onKey)
@@ -103,8 +109,8 @@ export default function HangingGallery() {
 
   return (
     <section className="gallery section" id="gallery">
-      <SectionTitle kicker="Moments we treasure" title="Our Memories" />
-      <p className="section-lead">Hover over a frame to set it swinging — tap to see it up close.</p>
+      <SectionTitle kicker={t('gallery.kicker')} title={t('gallery.title')} />
+      <p className="section-lead">{t('gallery.lead')}</p>
 
       <div className="gallery-rows">
         {rows.map((row, r) => (
@@ -144,21 +150,21 @@ export default function HangingGallery() {
                 transition={{ type: 'spring', stiffness: 160, damping: 20 }}
               >
                 <span className="frame-mat">
-                  <Photo src={wedding.gallery[open].src} alt={wedding.gallery[open].caption} />
+                  <Photo src={items[open].src} alt={items[open].caption} />
                 </span>
-                <figcaption>{wedding.gallery[open].caption}</figcaption>
+                <figcaption>{items[open].caption}</figcaption>
               </motion.figure>
             </AnimatePresence>
-            <button className="lb-btn lb-close" onClick={() => setOpen(null)} aria-label="Close">
+            <button className="lb-btn lb-close" onClick={() => setOpen(null)} aria-label={t('gallery.close')}>
               ×
             </button>
             <button
               className="lb-btn lb-prev"
               onClick={(e) => {
                 e.stopPropagation()
-                setOpen((o) => (o - 1 + wedding.gallery.length) % wedding.gallery.length)
+                setOpen((o) => (o - 1 + items.length) % items.length)
               }}
-              aria-label="Previous"
+              aria-label={t('gallery.prev')}
             >
               ‹
             </button>
@@ -166,9 +172,9 @@ export default function HangingGallery() {
               className="lb-btn lb-next"
               onClick={(e) => {
                 e.stopPropagation()
-                setOpen((o) => (o + 1) % wedding.gallery.length)
+                setOpen((o) => (o + 1) % items.length)
               }}
-              aria-label="Next"
+              aria-label={t('gallery.next')}
             >
               ›
             </button>

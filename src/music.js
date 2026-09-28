@@ -221,6 +221,48 @@ function createFileMusic(src) {
   }
 }
 
+/** Two soft wooden knocks on the church door (synthesized, no file) */
+export function playKnock() {
+  try {
+    const ctx = new (window.AudioContext || window.webkitAudioContext)()
+    const knock = (t) => {
+      // body thump
+      const o = ctx.createOscillator()
+      const g = ctx.createGain()
+      o.type = 'sine'
+      o.frequency.setValueAtTime(140, t)
+      o.frequency.exponentialRampToValueAtTime(55, t + 0.12)
+      g.gain.setValueAtTime(0.0001, t)
+      g.gain.exponentialRampToValueAtTime(0.55, t + 0.005)
+      g.gain.exponentialRampToValueAtTime(0.0001, t + 0.22)
+      o.connect(g).connect(ctx.destination)
+      o.start(t)
+      o.stop(t + 0.25)
+      // woody click
+      const len = Math.floor(ctx.sampleRate * 0.05)
+      const buf = ctx.createBuffer(1, len, ctx.sampleRate)
+      const d = buf.getChannelData(0)
+      for (let i = 0; i < len; i++) d[i] = (Math.random() * 2 - 1) * Math.pow(1 - i / len, 4)
+      const n = ctx.createBufferSource()
+      n.buffer = buf
+      const f = ctx.createBiquadFilter()
+      f.type = 'bandpass'
+      f.frequency.value = 900
+      f.Q.value = 1.2
+      const ng = ctx.createGain()
+      ng.gain.value = 0.35
+      n.connect(f).connect(ng).connect(ctx.destination)
+      n.start(t)
+    }
+    const now = ctx.currentTime + 0.02
+    knock(now)
+    knock(now + 0.3)
+    setTimeout(() => ctx.close(), 1200)
+  } catch {
+    // audio unavailable — the visual knock still plays
+  }
+}
+
 export function createMusic(src) {
   return src ? createFileMusic(src) : createHymn()
 }

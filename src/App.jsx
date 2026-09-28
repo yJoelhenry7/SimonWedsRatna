@@ -11,6 +11,7 @@ import Events from './components/Events.jsx'
 import Blessing from './components/Blessing.jsx'
 import Petals from './components/Petals.jsx'
 import MusicToggle from './components/MusicToggle.jsx'
+import LanguageToggle from './components/LanguageToggle.jsx'
 import { createMusic } from './music.js'
 import { wedding } from './data.js'
 
@@ -73,11 +74,12 @@ export default function App() {
       <Petals active={entered} />
       <Nav visible={entered} onNavigate={scrollTo} />
       <MusicToggle visible={entered} playing={musicOn} onToggle={toggleMusic} />
+      <LanguageToggle />
       <main>
         <Hero entered={entered} onScrollDown={() => scrollTo('verse')} />
         <Verse />
         <Couple />
-        <HangingGallery />
+        {wedding.showGallery && <HangingGallery />}
         <Events />
         <Blessing />
       </main>

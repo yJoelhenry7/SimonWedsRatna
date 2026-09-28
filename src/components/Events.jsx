@@ -1,6 +1,8 @@
 import { useEffect, useState } from 'react'
 import { AnimatePresence, motion } from 'motion/react'
+import { useTranslation } from 'react-i18next'
 import { SectionTitle } from './Ornament.jsx'
+import { formatWeddingDate } from '../calendar.js'
 import { wedding } from '../data.js'
 
 function useCountdown(target) {
@@ -38,12 +40,12 @@ function Unit({ value, label }) {
 }
 
 export default function Events() {
-  const t = useCountdown(wedding.date)
-  const dateLabel = new Date(wedding.date).toLocaleDateString('en-GB', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' })
+  const { t, i18n } = useTranslation()
+  const left = useCountdown(wedding.date)
 
   return (
     <section className="events section" id="events">
-      <SectionTitle kicker={dateLabel} title="The Celebration" />
+      <SectionTitle kicker={formatWeddingDate(i18n.resolvedLanguage)} title={t('events.title')} />
 
       <motion.div
         className="countdown"
@@ -52,16 +54,16 @@ export default function Events() {
         viewport={{ once: true }}
         transition={{ duration: 1, ease: [0.22, 1, 0.36, 1] }}
       >
-        <Unit value={t.days} label="Days" />
-        <Unit value={t.hours} label="Hours" />
-        <Unit value={t.minutes} label="Minutes" />
-        <Unit value={t.seconds} label="Seconds" />
+        <Unit value={left.days} label={t('events.units.days')} />
+        <Unit value={left.hours} label={t('events.units.hours')} />
+        <Unit value={left.minutes} label={t('events.units.minutes')} />
+        <Unit value={left.seconds} label={t('events.units.seconds')} />
       </motion.div>
 
       <div className="event-cards">
-        {wedding.events.map((e, i) => (
+        {wedding.events.map(({ id, map }, i) => (
           <motion.article
-            key={e.title}
+            key={id}
             className="event-card"
             initial={{ opacity: 0, y: 80, rotateX: 25 }}
             whileInView={{ opacity: 1, y: 0, rotateX: 0 }}
@@ -72,13 +74,13 @@ export default function Events() {
             <div className="event-arch">
               <span className="event-num">{['I', 'II', 'III', 'IV'][i]}</span>
             </div>
-            <h3>{e.title}</h3>
-            <p className="event-time">{e.time}</p>
-            <p className="event-venue">{e.venue}</p>
-            <p className="muted">{e.address}</p>
-            <p className="event-note">{e.note}</p>
-            <a className="btn-ghost" href={e.map} target="_blank" rel="noreferrer">
-              View Map
+            <h3>{t(`events.${id}.title`)}</h3>
+            <p className="event-time">{t(`events.${id}.time`)}</p>
+            <p className="event-venue">{t(`events.${id}.venue`)}</p>
+            <p className="muted">{t(`events.${id}.address`)}</p>
+            <p className="event-note">{t(`events.${id}.note`)}</p>
+            <a className="btn-ghost" href={map} target="_blank" rel="noreferrer">
+              {t('events.viewMap')}
             </a>
           </motion.article>
         ))}

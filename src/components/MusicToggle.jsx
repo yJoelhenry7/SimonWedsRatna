@@ -1,7 +1,9 @@
 import { AnimatePresence, motion } from 'motion/react'
+import { useTranslation } from 'react-i18next'
 import { wedding } from '../data.js'
 
 export default function MusicToggle({ visible, playing, onToggle }) {
+  const { t } = useTranslation()
   return (
     <AnimatePresence>
       {visible && (
@@ -14,9 +16,9 @@ export default function MusicToggle({ visible, playing, onToggle }) {
           transition={{ type: 'spring', stiffness: 200, damping: 16, delay: 1.2 }}
           whileHover={{ scale: 1.08 }}
           whileTap={{ scale: 0.92 }}
-          aria-label={playing ? 'Pause music' : 'Play music'}
+          aria-label={playing ? t('music.pause') : t('music.play')}
           aria-pressed={playing}
-          title={playing ? 'Pause music' : 'Play music'}
+          title={playing ? t('music.pause') : t('music.play')}
         >
           <span className="music-ring" />
           <svg viewBox="0 0 24 24" aria-hidden="true">
@@ -30,7 +32,7 @@ export default function MusicToggle({ visible, playing, onToggle }) {
             <i />
             <i />
           </span>
-          <span className="music-label">{playing ? wedding.musicTitle : 'Music off'}</span>
+          <span className="music-label">{playing ? wedding.musicTitle : t('music.off')}</span>
         </motion.button>
       )}
     </AnimatePresence>

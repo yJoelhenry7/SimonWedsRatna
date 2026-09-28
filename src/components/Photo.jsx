@@ -10,9 +10,9 @@ export default function Photo({ src, alt, className = '', fallback }) {
         {fallback ?? (
           <>
             <span className="mono">
-              {wedding.bride.first[0]}
-              <em>&amp;</em>
               {wedding.groom.first[0]}
+              <em>&amp;</em>
+              {wedding.bride.first[0]}
             </span>
             <small>{alt}</small>
           </>

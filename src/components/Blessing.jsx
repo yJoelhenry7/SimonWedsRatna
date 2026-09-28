@@ -1,9 +1,12 @@
 import { motion } from 'motion/react'
+import { useTranslation } from 'react-i18next'
 import { Cross, Flourish, Reveal } from './Ornament.jsx'
 import { CoupleToon } from './Toons.jsx'
 import { wedding } from '../data.js'
 
 export default function Blessing() {
+  const { t } = useTranslation()
+
   return (
     <section className="blessing section" id="rsvp">
       <div className="blessing-arch">
@@ -20,23 +23,23 @@ export default function Blessing() {
           <Cross size={28} className="glow" />
         </Reveal>
         <Reveal delay={0.1}>
-          <p className="blessing-quote">“Therefore what God has joined together, let no one separate.”</p>
-          <p className="kicker">Mark 10 : 9</p>
+          <p className="blessing-quote">{t('blessing.quote')}</p>
+          <p className="kicker">{t('blessing.ref')}</p>
         </Reveal>
         <Flourish />
         <Reveal delay={0.2}>
-          <p className="section-lead">Your presence and prayers are the greatest gift we could ask for.</p>
+          <p className="section-lead">{t('blessing.lead')}</p>
         </Reveal>
         <Reveal delay={0.3}>
           <motion.a
             className="btn-gold"
-            href={wedding.rsvp.link}
+            href={wedding.rsvpUrl}
             target="_blank"
             rel="noreferrer"
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.96 }}
           >
-            RSVP — We’ll be there
+            {t('blessing.rsvp')}
           </motion.a>
         </Reveal>
         <Reveal delay={0.4}>
@@ -45,9 +48,11 @@ export default function Blessing() {
       </div>
       <footer>
         <p className="script">
-          {wedding.bride.first} &amp; {wedding.groom.first}
+          {t('names.groom')} &amp; {t('names.bride')}
         </p>
-        <p className="muted">With love & gratitude · {new Date(wedding.date).getFullYear()}</p>
+        <p className="muted">
+          {t('blessing.footer')} · {new Date(wedding.date).getFullYear()}
+        </p>
       </footer>
     </section>
   )

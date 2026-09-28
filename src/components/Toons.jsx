@@ -1,4 +1,5 @@
-// Cute vector illustrations of the bride & groom (pure SVG, animated with CSS)
+// Cute vector illustrations of the groom & bride (pure SVG, animated with CSS)
+import { useTranslation } from 'react-i18next'
 
 const BRIDE_SKIN = '#c98b62'
 const GROOM_SKIN = '#b77a52'
@@ -150,10 +151,17 @@ export function GroomG() {
       <circle cx="58" cy="240" r="7" fill={GROOM_SKIN} />
       <circle cx="142" cy="240" r="7" fill={GROOM_SKIN} />
 
-      {/* jacket */}
+      {/* black suit jacket */}
       <path d="M68 118 Q100 108 132 118 C140 150 142 200 138 238 Q100 248 62 238 C58 200 60 150 68 118Z" fill="#1b1b20" />
       <path d="M86 114 L100 162 L114 114Z" fill="#fff" />
-      <path d="M96 118 L104 118 L102 124 L106 152 L100 160 L94 152 L98 124Z" fill="#7a1a2e" />
+      {/* shirt studs */}
+      <circle cx="100" cy="134" r="1.3" fill="#c9ccd6" />
+      <circle cx="100" cy="144" r="1.3" fill="#c9ccd6" />
+      {/* black bow tie */}
+      <path d="M99 120.5 L88.5 114.5 Q86.5 120.5 88.5 126.5 Z" fill="#0c0c0f" />
+      <path d="M101 120.5 L111.5 114.5 Q113.5 120.5 111.5 126.5 Z" fill="#0c0c0f" />
+      <path d="M90.5 117.5 L96 120.5 M109.5 117.5 L104 120.5" stroke="#3a3a42" strokeWidth="0.9" strokeLinecap="round" />
+      <rect x="97.4" y="117.6" width="5.2" height="5.8" rx="1.5" fill="#1d1d23" />
       <path d="M86 114 L100 162 L91 136 L78 122Z" fill="#2c2c33" />
       <path d="M114 114 L100 162 L109 136 L122 122Z" fill="#2c2c33" />
       <path d="M100 162 L100 240" stroke="#0c0c0f" strokeWidth="1.5" />
@@ -170,6 +178,8 @@ export function GroomG() {
 
       {/* head */}
       <g className="toon-head">
+        {/* hair backing behind the face so no background peeks through at the hairline */}
+        <path d="M64 80 C60 44 82 31 102 31 C124 32 141 46 136 80 Z" fill={HAIR} />
         <circle cx="68" cy="80" r="5.5" fill={GROOM_SKIN} />
         <circle cx="132" cy="80" r="5.5" fill={GROOM_SKIN} />
         <ellipse cx="100" cy="76" rx="31" ry="33" fill={GROOM_SKIN} />
@@ -182,49 +192,55 @@ export function GroomG() {
         <ellipse cx="80" cy="86" rx="5" ry="2.8" fill="#d9776c" opacity="0.35" />
         <ellipse cx="120" cy="86" rx="5" ry="2.8" fill="#d9776c" opacity="0.35" />
         <path d="M98 84 q2 3 4 0" stroke="#8a4f33" strokeWidth="1.6" fill="none" strokeLinecap="round" />
-        {/* full beard with sideburns, medium intensity */}
+        {/* sideburns — close the gap between hair and beard at the temples */}
+        <path d="M65 56 C62 64 63 74 67 82 L73 80 C71 72 71 63 74 55 Z" fill={HAIR} />
+        <path d="M135 56 C138 64 137 74 133 82 L127 80 C129 72 129 63 126 55 Z" fill={HAIR} />
+        {/* full beard, medium intensity — solid fill so no light shows through */}
         <path
           d="M67 70 C65 94 78 116 100 117 C122 116 135 94 133 70 L128 72 C127 87 121 95 112 96 Q100 92 88 96 C79 95 73 87 72 72 Z"
-          fill="#3b271d"
-          opacity="0.85"
+          fill="#352219"
         />
-        <path d="M80 104 q4 4 8 5 M112 109 q4 -1 8 -5 M97 111 q3 1 6 0" stroke="#5a3e30" strokeWidth="1.2" fill="none" strokeLinecap="round" opacity="0.6" />
-        <path d="M89 92 Q100 86 111 92 Q106 96 100 94 Q94 96 89 92Z" fill="#3b271d" opacity="0.92" />
+        <path d="M89 92 Q100 86 111 92 Q106 96 100 94 Q94 96 89 92Z" fill="#2c1c14" />
         <path d="M93 98 Q100 105 107 98 Q100 100 93 98Z" fill="#8a3a36" />
-        <path d="M95 98.4 Q100 100 105 98.4" stroke="#fff" strokeWidth="1.2" fill="none" strokeLinecap="round" />
       </g>
     </g>
   )
 }
 
 export function BrideToon({ className = '' }) {
+  const { t } = useTranslation()
   return (
-    <svg className={`toon-svg ${className}`} viewBox="0 0 200 320" role="img" aria-label="Illustration of the bride">
+    <svg className={`toon-svg ${className}`} viewBox="0 0 200 320" role="img" aria-label={t('toons.bride')}>
       <BrideG />
     </svg>
   )
 }
 
 export function GroomToon({ className = '' }) {
+  const { t } = useTranslation()
   return (
-    <svg className={`toon-svg ${className}`} viewBox="0 0 200 320" role="img" aria-label="Illustration of the groom">
+    <svg className={`toon-svg ${className}`} viewBox="0 0 200 320" role="img" aria-label={t('toons.groom')}>
       <GroomG />
     </svg>
   )
 }
 
-/** The couple standing together under a floating heart */
+/** The couple standing together under a floating heart — groom on the left */
 export function CoupleToon({ className = '' }) {
+  const { t } = useTranslation()
   return (
-    <svg className={`toon-svg couple-toon ${className}`} viewBox="-6 -30 290 345" role="img" aria-label="Illustration of the bride and groom together">
-      <g transform="translate(116 -4)">
-        <GroomG />
-      </g>
-      <g transform="translate(-18 6)">
+    <svg className={`toon-svg couple-toon ${className}`} viewBox="-6 -30 290 345" role="img" aria-label={t('toons.couple')}>
+      <g transform="translate(100 6)">
         <BrideG />
       </g>
-      <g className="toon-heart">
-        <path d="M149 -8 C149 -18 135 -20 135 -9 C135 0 149 6 149 10 C149 6 163 0 163 -9 C163 -20 149 -18 149 -8Z" fill="#c0392b" />
+      <g transform="translate(-24 -4)">
+        <GroomG />
+      </g>
+      {/* wrapper holds the offset so the CSS heartbeat transform doesn't override it */}
+      <g transform="translate(-11 0)">
+        <g className="toon-heart">
+          <path d="M149 -8 C149 -18 135 -20 135 -9 C135 0 149 6 149 10 C149 6 163 0 163 -9 C163 -20 149 -18 149 -8Z" fill="#c0392b" />
+        </g>
       </g>
     </svg>
   )

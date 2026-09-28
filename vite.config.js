@@ -1,7 +1,22 @@
 import react from '@vitejs/plugin-react'
-import { defineConfig } from 'vite'
+import { defineConfig, loadEnv } from 'vite'
+
+// WhatsApp/Facebook link previews need an absolute image URL.
+// The site address comes from SITE_URL (set it in .env or your host's settings),
+// or automatically from Netlify (URL) / Vercel (VERCEL_PROJECT_PRODUCTION_URL).
+function siteUrlPlugin(env) {
+  const vercel = env.VERCEL_PROJECT_PRODUCTION_URL && `https://${env.VERCEL_PROJECT_PRODUCTION_URL}`
+  const url = (env.SITE_URL || env.URL || vercel || '').replace(/\/+$/, '')
+  return {
+    name: 'site-url',
+    transformIndexHtml: (html) => html.replaceAll('%SITE_URL%', url),
+  }
+}
 
 // https://vite.dev/config/
-export default defineConfig({
-  plugins: [react()],
+export default defineConfig(({ mode }) => {
+  const env = { ...process.env, ...loadEnv(mode, process.cwd(), '') }
+  return {
+    plugins: [react(), siteUrlPlugin(env)],
+  }
 })

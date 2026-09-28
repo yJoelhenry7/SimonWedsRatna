@@ -1,22 +1,25 @@
 import { useRef } from 'react'
 import { motion, useScroll, useTransform } from 'motion/react'
+import { useTranslation } from 'react-i18next'
 import Cathedral from './Cathedral.jsx'
+import Doves from './Doves.jsx'
+import AddToCalendar from './AddToCalendar.jsx'
 import { Cross } from './Ornament.jsx'
-import { wedding } from '../data.js'
+import { formatWeddingDate } from '../calendar.js'
 
-const dateLabel = new Date(wedding.date).toLocaleDateString('en-GB', {
-  weekday: 'long',
-  day: 'numeric',
-  month: 'long',
-  year: 'numeric',
-})
+// Split into user-perceived characters so combining marks stay attached.
+// Telugu conjuncts don't survive being split into separate boxes, so animate whole words there.
+function units(text, lng) {
+  if (lng === 'te' || typeof Intl.Segmenter !== 'function') return text.split(/(\s+)/).filter(Boolean)
+  return Array.from(new Intl.Segmenter(lng, { granularity: 'grapheme' }).segment(text), (s) => s.segment)
+}
 
-function Letters({ text, delay, className }) {
+function Letters({ text, delay, className, lng }) {
   return (
     <span className={className} aria-label={text}>
-      {[...text].map((ch, i) => (
+      {units(text, lng).map((ch, i) => (
         <motion.span
-          key={i}
+          key={`${lng}-${i}`}
           aria-hidden="true"
           className="letter"
           variants={{
@@ -30,7 +33,7 @@ function Letters({ text, delay, className }) {
             },
           }}
         >
-          {ch === ' ' ? ' ' : ch}
+          {ch.trim() === '' ? ' ' : ch}
         </motion.span>
       ))}
     </span>
@@ -43,6 +46,8 @@ const fade = (delay) => ({
 })
 
 export default function Hero({ entered, onScrollDown }) {
+  const { t, i18n } = useTranslation()
+  const lng = i18n.resolvedLanguage
   const ref = useRef(null)
   const { scrollYProgress } = useScroll({ target: ref, offset: ['start start', 'end start'] })
   const bgY = useTransform(scrollYProgress, [0, 1], ['0%', '22%'])
@@ -57,6 +62,7 @@ export default function Hero({ entered, onScrollDown }) {
       </motion.div>
       <div className="hero-vignette" />
       <Candles />
+      <Doves play={entered} />
 
       <motion.div
         className="hero-content"
@@ -68,10 +74,10 @@ export default function Hero({ entered, onScrollDown }) {
           <Cross size={30} className="glow" />
         </motion.div>
         <motion.p className="kicker" variants={fade(0.5)}>
-          Together with their families
+          {t('hero.kicker')}
         </motion.p>
         <h1 className="hero-names">
-          <Letters text={wedding.bride.name} delay={0.8} className="name" />
+          <Letters text={t('names.groom')} delay={0.8} className="name" lng={lng} />
           <motion.span
             className="amp"
             variants={{
@@ -81,19 +87,22 @@ export default function Hero({ entered, onScrollDown }) {
           >
             &amp;
           </motion.span>
-          <Letters text={wedding.groom.name} delay={1.9} className="name" />
+          <Letters text={t('names.bride')} delay={1.9} className="name" lng={lng} />
         </h1>
         <motion.p className="hero-invite" variants={fade(2.8)}>
-          request the honour of your presence as they unite in Holy Matrimony
+          {t('hero.invite')}
         </motion.p>
         <motion.div className="hero-date" variants={fade(3.1)}>
           <span className="line" />
-          <span>{dateLabel}</span>
+          <span>{formatWeddingDate(lng)}</span>
           <span className="line" />
         </motion.div>
         <motion.p className="hero-city" variants={fade(3.3)}>
-          {wedding.city}
+          {t('place')}
         </motion.p>
+        <motion.div className="hero-cal" variants={fade(3.6)}>
+          <AddToCalendar />
+        </motion.div>
       </motion.div>
 
       <motion.button
@@ -102,7 +111,7 @@ export default function Hero({ entered, onScrollDown }) {
         initial={{ opacity: 0 }}
         animate={{ opacity: entered ? 1 : 0 }}
         transition={{ delay: 3.8, duration: 1 }}
-        aria-label="Scroll down"
+        aria-label={t('hero.scrollDown')}
       >
         <span />
       </motion.button>

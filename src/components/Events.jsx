@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react'
 import { AnimatePresence, motion } from 'motion/react'
 import { useTranslation } from 'react-i18next'
 import { SectionTitle } from './Ornament.jsx'
-import { formatWeddingDate } from '../calendar.js'
+import { formatEventDay, formatWeddingDate } from '../calendar.js'
 import { wedding } from '../data.js'
 
 function useCountdown(target) {
@@ -61,7 +61,7 @@ export default function Events() {
       </motion.div>
 
       <div className="event-cards">
-        {wedding.events.map(({ id, map }, i) => (
+        {wedding.events.map(({ id, date, map }, i) => (
           <motion.article
             key={id}
             className="event-card"
@@ -75,6 +75,7 @@ export default function Events() {
               <span className="event-num">{['I', 'II', 'III', 'IV'][i]}</span>
             </div>
             <h3>{t(`events.${id}.title`)}</h3>
+            <p className="event-day">{formatEventDay(date, i18n.resolvedLanguage)}</p>
             <p className="event-time">{t(`events.${id}.time`)}</p>
             <p className="event-venue">{t(`events.${id}.venue`)}</p>
             <p className="muted">{t(`events.${id}.address`)}</p>

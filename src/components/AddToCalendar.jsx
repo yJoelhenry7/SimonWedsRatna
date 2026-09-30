@@ -7,7 +7,7 @@ export default function AddToCalendar() {
   const { t } = useTranslation()
   const [open, setOpen] = useState(false)
   const ref = useRef(null)
-  const invite = { title: t('calendar.title'), details: t('calendar.details') }
+  const invite = { title: t('calendar.title'), details: t('calendar.details'), receptionTitle: t('calendar.receptionTitle') }
 
   useEffect(() => {
     if (!open) return

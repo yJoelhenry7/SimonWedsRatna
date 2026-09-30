@@ -5,8 +5,10 @@
 //  Photos: drop files into /public/photos with the names below.
 // ─────────────────────────────────────────────────────────────
 
-// Google Maps search for the town — swap for exact venue pins once you have them
-const VENUE_MAP = 'https://maps.google.com/?q=' + encodeURIComponent('Srungavruksham, West Godavari, Andhra Pradesh')
+// Google Maps searches for each venue — swap for exact pins (maps.app.goo.gl links) if you have them
+const mapSearch = (q) => 'https://maps.google.com/?q=' + encodeURIComponent(q)
+const CHURCH = 'Srungara Lutheran Devalayam, Srungavruksham, West Godavari, Andhra Pradesh'
+const RECEPTION_HALL = "St. Peter's Lutheran Convention Hall, Gunipudi, Bhimavaram, Andhra Pradesh"
 
 export const wedding = {
   // `first` gives the English initials for the S & R monogram in every language.
@@ -34,14 +36,15 @@ export const wedding = {
   // Calendar invite ("Add to Calendar" button)
   calendar: {
     durationHours: 3.5,
-    location: 'Srungavruksham, West Godavari, Andhra Pradesh, India',
+    location: CHURCH,
   },
 
-  // Event ids match the text in the locale files (events.<id>.title etc.)
+  // Event ids match the text in the locale files (events.<id>.title etc.).
+  // date shows on each card and goes into the calendar invite; hours = length in the invite.
   events: [
-    { id: 'matrimony', map: VENUE_MAP },
-    { id: 'luncheon', map: VENUE_MAP },
-    { id: 'reception', map: VENUE_MAP },
+    { id: 'matrimony', date: '2026-10-20T10:30:00+05:30', hours: 2.5, location: CHURCH, map: mapSearch(CHURCH) },
+    { id: 'luncheon', date: '2026-10-20T13:00:00+05:30', hours: 1.5, location: CHURCH, map: mapSearch(CHURCH) },
+    { id: 'reception', date: '2026-10-21T10:00:00+05:30', hours: 3, location: RECEPTION_HALL, map: mapSearch(RECEPTION_HALL) },
   ],
 
   // Memories section (hanging frames) — set to true to show it again, with its menu link

@@ -23,8 +23,9 @@ export default {
     google: 'Google Calendar',
     ics: 'Apple / Outlook (.ics)',
     title: 'Wedding of Simon & Ratna',
+    receptionTitle: 'Reception — Simon & Ratna',
     details:
-      'Holy Matrimony of Simon & Ratna at 10:30 AM, followed by the wedding luncheon at 1:00 PM and the reception at 7:00 PM. Kindly be seated by 10:15 AM.',
+      'Holy Matrimony of Simon & Ratna at 10:30 AM at Srungara Lutheran Devalayam, Srungavruksham, followed by the wedding luncheon at 1:00 PM. Kindly be seated by 10:15 AM. Reception: Wednesday, 21 October at 10:00 AM, St. Peter\'s Lutheran Convention Hall, Gunipudi, Bhimavaram.',
   },
 
   verse: {
@@ -37,7 +38,7 @@ export default {
     title: 'The Groom & Bride',
     groom: 'The Groom',
     bride: 'The Bride',
-    groomParents: 'Beloved son of Mr. Moses & Mrs. Vijaya',
+    groomParents: 'Beloved son of Rev. Moses & Mrs. Vijaya',
     brideParents: 'Beloved daughter of Mr. Yashayya & Mrs. Prema Kumari',
   },
 
@@ -59,7 +60,7 @@ export default {
     matrimony: {
       title: 'Holy Matrimony',
       time: '10:30 AM',
-      venue: 'St. ______ Church',
+      venue: 'Srungara Lutheran Devalayam',
       address: 'Srungavruksham, West Godavari',
       note: 'Kindly be seated by 10:15 AM',
     },
@@ -72,10 +73,10 @@ export default {
     },
     reception: {
       title: 'Reception',
-      time: '7:00 PM',
-      venue: '______ Convention Centre',
-      address: 'Srungavruksham, West Godavari',
-      note: 'Dinner, music & celebration',
+      time: '10:00 AM',
+      venue: "St. Peter's Lutheran Convention Hall",
+      address: 'Gunipudi, Bhimavaram',
+      note: 'Join us to bless the newlyweds',
     },
   },
 

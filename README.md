@@ -22,6 +22,11 @@ npm run build    # static site in /dist
 Guests switch with the EN / తె toggle (bottom-left); their choice is remembered.
 Share a link that opens straight in Telugu with `?lng=te`, e.g. `https://your-site/?lng=te`.
 
+## Personal invitation page
+
+`/vijay-invitation` is a personal invitation from Dr. Y. Vijayakar (`src/pages/VijayInvite.jsx`, text under `vijay` in the locale files) with its own WhatsApp preview (`public/og-vijay.jpg`). Its button opens the main site in the same language.
+To add another page like it, copy the `vijay-invitation/` folder and add its name to `PAGES` in `vite.config.js`.
+
 ## WhatsApp link preview
 
 `public/og-image.jpg` is the preview card. WhatsApp needs the site's full address to show it:

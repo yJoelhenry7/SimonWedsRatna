@@ -95,4 +95,18 @@ export default {
     bride: 'Illustration of the bride',
     couple: 'Illustration of the groom and bride together',
   },
+
+  // Personal invitation page at /vijay-invitation
+  vijay: {
+    kicker: 'A personal invitation',
+    greeting: 'Dear friends & family,',
+    message: 'With great joy and gratitude to God, I warmly invite you and your family to the Holy Matrimony of my beloved brother',
+    with: 'with',
+    blessing: 'Your presence and prayers will make this day complete.',
+    signoff: 'With love,',
+    from: 'Dr. Y. Vijayakar',
+    wedding: 'Holy Matrimony',
+    reception: 'Reception',
+    cta: 'Open the Wedding Invitation',
+  },
 }
